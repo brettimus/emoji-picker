@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Emoji Picker Demo</title>
+    <style media="screen">
+      html,
+      body {
+          background: #363636;
+          color: white;
+          font-family: sans-serif;
+          margin: 0;
+          padding: 0;
+      }
+
+      main {
+        padding: 2em 3em;
+      }
+
+      .emoji-picker {
+        display: flex;
+        justify-content: center;
+
+        left: 0;
+        position: fixed;
+        top: 0;
+
+        padding-top: 8em;
+        text-align: center;
+        width: 100vw;
+      }
+
+      .emoji-picker::before {
+        background: darkgrey;
+        content: "";
+        height: 100vh;
+        left: 0;
+        opacity: .2;
+        position: absolute;
+        top: 0;
+        width: 100vw;
+        z-index: 0;
+      }
+
+      .emoji {
+        font-weight: 400 !important;
+      }
+
+      .emoji-choice {
+        display: inline-flex;
+        justify-content: center;
+        align-self: center;
+
+        border: solid 1px currentColor;
+        border-radius: 4px;
+        cursor: pointer;
+
+        font-size: 200%;
+        padding: 1rem 1.2rem 1.1rem;
+
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Stuff and things</h1>
+      <p>
+        Yup those stuff and things.
+      </p>
+    </main>
+    <div class="emoji-picker" style="display: none;">
+      <h2>Emoji!</h2>
+    </div>
+
+    <script src="picker.js"></script>
+    <script type="text/javascript">
+    loadJSON("emoji.json", function(emojis) {
+      var smiles = emojis.filter(isSmile).map(getEmoji);
+
+      populatePicker(smiles);
+
+      function getEmoji(emoji) {
+        return emoji.emoji;
+      }
+
+      function isSmile(emoji) {
+        return emoji.aliases.some(function(alias) {
+          return alias.includes("smile");
+        });
+      }
+    });
+    function loadJSON(path, success, error, context) {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+          context = context || this;
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+              if (xhr.status === 200) {
+                  if (success) {
+                      success.call(context, JSON.parse(xhr.responseText));
+                  }
+              } else {
+                  if (error) {
+                      error.call(context, xhr);
+                  }
+              }
+          }
+      };
+      xhr.open("GET", path, true);
+      xhr.send();
+      return xhr;
+    }
+    </script>
+  </body>
+</html>
