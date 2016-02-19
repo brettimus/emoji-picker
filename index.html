@@ -7,7 +7,7 @@
       html,
       body {
           background: #363636;
-          color: white;
+          color: #fff;
           font-family: sans-serif;
           margin: 0;
           padding: 0;
@@ -18,28 +18,18 @@
       }
 
       .emoji-picker {
-        display: flex;
-        justify-content: center;
-
-        left: 0;
         position: fixed;
-        top: 0;
-
-        padding-top: 8em;
-        text-align: center;
+        left: 0;
+        top: 8em;
         width: 100vw;
       }
 
-      .emoji-picker::before {
-        background: darkgrey;
-        content: "";
-        height: 100vh;
-        left: 0;
-        opacity: .2;
-        position: absolute;
-        top: 0;
-        width: 100vw;
-        z-index: 0;
+      .emoji-choices {
+        display: flex;
+        justify-content: center;
+
+        width: 32em;
+        margin: 0 auto;
       }
 
       .emoji {
@@ -57,8 +47,6 @@
 
         font-size: 200%;
         padding: 1rem 1.2rem 1.1rem;
-
-        z-index: 1;
       }
     </style>
   </head>
@@ -66,16 +54,20 @@
     <main>
       <h1>Stuff and things</h1>
       <p>
-        Yup those stuff and things.
+        Yup. Stuff and things.
       </p>
     </main>
     <div class="emoji-picker" style="display: none;">
-      <h2>Emoji!</h2>
+      <div class="emoji-choices">
+      </div>
     </div>
 
     <script src="picker.js"></script>
     <script type="text/javascript">
-    loadJSON("emoji.json", function(emojis) {
+
+    loadJSON("emoji.json", parseEmojiData);
+
+    function parseEmojiData(emojis) {
       var smiles = emojis.filter(isSmile).map(getEmoji);
 
       populatePicker(smiles);
@@ -89,7 +81,8 @@
           return alias.includes("smile");
         });
       }
-    });
+    }
+
     function loadJSON(path, success, error, context) {
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() {

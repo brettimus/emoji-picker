@@ -1,4 +1,4 @@
-# :grin: :point:
+# :grin: Emoji Picker
 
 * Only works on mac and a modern browser
 * Summon with `command + command`
