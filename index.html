@@ -6,8 +6,8 @@
     <style media="screen">
       html,
       body {
-          background: #363636;
-          color: #fff;
+          background: darkseagreen;
+          color: #363636;
           font-family: sans-serif;
           margin: 0;
           padding: 0;
@@ -26,10 +26,16 @@
 
       .emoji-choices {
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
 
-        width: 32em;
+        background: #363636;
+        border: solid 4px currentColor;
+        border-radius: 1em;
+        box-shadow: 0 0 0 1em hsla(0, 0%, 100%, .5);
+        color: #fff;
         margin: 0 auto;
+        padding: 2em 2.2em 2.1em;
+        width: 30em;
       }
 
       .emoji {
@@ -41,20 +47,18 @@
         justify-content: center;
         align-self: center;
 
-        border: solid 1px currentColor;
-        border-radius: 4px;
         cursor: pointer;
-
         font-size: 200%;
         padding: 1rem 1.2rem 1.1rem;
+        margin: 0 .1rem;
       }
     </style>
   </head>
   <body>
     <main>
-      <h1>Stuff and things</h1>
+      <h1>Hit ⌘ Twice</h1>
       <p>
-        Yup. Stuff and things.
+        A little Alfred-style emoji picker should appear.
       </p>
     </main>
     <div class="emoji-picker" style="display: none;">

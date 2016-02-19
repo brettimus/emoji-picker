@@ -3,7 +3,7 @@ var isDoubleMeta = false;
 var isCopySupported = document.queryCommandSupported('copy');
 var oldSelectionRange;
 
-if (!picker) throw new Error("Can't find picker");
+if (!picker) throw new Error("Can't find container ('.emoji-picker')");
 if (!isCopySupported) throw new Error("'Copy to clipboard' not supported."); // Chrome 43+ should support
 
 document.body.addEventListener("keyup", keyupHandler);
@@ -16,7 +16,7 @@ function populatePicker(emojis) {
 function addEmojiToPicker(emoji) {
   var choices = picker.querySelector(".emoji-choices");
   if (!choices) throw new Error("Could not find emoji choices container.");
-  picker.appendChild(createEmojiElt(emoji));
+  choices.appendChild(createEmojiElt(emoji));
 }
 
 function createEmojiElt(emoji) {
