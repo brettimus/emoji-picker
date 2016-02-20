@@ -3,110 +3,28 @@
   <head>
     <meta charset="utf-8">
     <title>Emoji Picker Demo</title>
-    <style media="screen">
-      html,
-      body {
-          background: darkseagreen;
-          color: #363636;
-          font-family: sans-serif;
-          margin: 0;
-          padding: 0;
-      }
-
-      main {
-        padding: 2em 3em;
-      }
-
-      .emoji-picker {
-        position: fixed;
-        left: 0;
-        top: 8em;
-        width: 100vw;
-      }
-
-      .emoji-choices {
-        display: flex;
-        justify-content: space-around;
-
-        background: #363636;
-        border: solid 4px currentColor;
-        border-radius: 1em;
-        box-shadow: 0 0 0 1em hsla(0, 0%, 100%, .5);
-        color: #fff;
-        margin: 0 auto;
-        padding: 2em 2.2em 2.1em;
-        width: 30em;
-      }
-
-      .emoji {
-        font-weight: 400 !important;
-      }
-
-      .emoji-choice {
-        display: inline-flex;
-        justify-content: center;
-        align-self: center;
-
-        cursor: pointer;
-        font-size: 200%;
-        padding: 1rem 1.2rem 1.1rem;
-        margin: 0 .1rem;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <main>
-      <h1>Hit ⌘ Twice</h1>
-      <p>
-        A little Alfred-style emoji picker should appear.
-      </p>
+      <h1>Press ⌘ Twice</h1>
+      <p>A little Alfred-style emoji picker should appear.</p>
     </main>
-    <div class="emoji-picker" style="display: none;">
-      <div class="emoji-choices">
+
+    <div data-emoji-picker class="emoji-picker-container" style="display: none;">
+      <div class="emoji-picker">
+        <div data-emoji-searcher class="emoji-searcher">
+          <input type="text" value="" placeholder="Get some emoji!">
+        </div>
+        <div class="emoji-results">
+          <p>Results</p>
+          <div class="emoji-choices" data-emoji-choices></div>
+        </div>
       </div>
     </div>
 
+    <script src="clipboard.js"></script>
     <script src="picker.js"></script>
-    <script type="text/javascript">
-
-    loadJSON("emoji.json", parseEmojiData);
-
-    function parseEmojiData(emojis) {
-      var smiles = emojis.filter(isSmile).map(getEmoji);
-
-      populatePicker(smiles);
-
-      function getEmoji(emoji) {
-        return emoji.emoji;
-      }
-
-      function isSmile(emoji) {
-        return emoji.aliases.some(function(alias) {
-          return alias.includes("smile");
-        });
-      }
-    }
-
-    function loadJSON(path, success, error, context) {
-      var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function() {
-          context = context || this;
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-              if (xhr.status === 200) {
-                  if (success) {
-                      success.call(context, JSON.parse(xhr.responseText));
-                  }
-              } else {
-                  if (error) {
-                      error.call(context, xhr);
-                  }
-              }
-          }
-      };
-      xhr.open("GET", path, true);
-      xhr.send();
-      return xhr;
-    }
-    </script>
+    <script src="main.js"></script>
   </body>
 </html>

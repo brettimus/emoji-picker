@@ -1,22 +1,27 @@
-var picker = document.querySelector(".emoji-picker");
+var picker = document.querySelector("[data-emoji-picker]");
+var searcher = picker.querySelector("input");
+var results = getChoicesContainer();
 var isDoubleMeta = false;
 var isCopySupported = document.queryCommandSupported('copy');
-var oldSelectionRange;
 
 if (!picker) throw new Error("Can't find container ('.emoji-picker')");
 if (!isCopySupported) throw new Error("'Copy to clipboard' not supported."); // Chrome 43+ should support
 
 document.body.addEventListener("keyup", keyupHandler);
 picker.addEventListener("click", handleEmojiClick);
+searcher.addEventListener("input", handleInputChange);
 
-function populatePicker(emojis) {
+function clearResults() {
+  while (results.firstChild)
+    results.removeChild(results.firstChild);
+}
+
+function renderResults(emojis) {
   emojis.forEach(addEmojiToPicker);
 }
 
 function addEmojiToPicker(emoji) {
-  var choices = picker.querySelector(".emoji-choices");
-  if (!choices) throw new Error("Could not find emoji choices container.");
-  choices.appendChild(createEmojiElt(emoji));
+  results.appendChild(createEmojiElt(emoji));
 }
 
 function createEmojiElt(emoji) {
@@ -26,9 +31,21 @@ function createEmojiElt(emoji) {
   return span;
 }
 
+function handleInputChange(event) {
+  var query = cleanQuery(event.target.value);
+  clearResults();
+  if (query === "") return;
+  renderResults(findEmojisByAlias(query));
+}
+
+function cleanQuery(query) {
+  return query.toLowerCase().trim();
+}
+
 function handleEmojiClick(event) {
-  if (event.target.classList.contains("emoji-choice"))
-    copyToClipboard(event.target);
+  if (!event.target.classList.contains("emoji-choice")) return;
+  copyToClipboard(event.target.firstChild);
+  hidePicker();
 }
 
 function copyToClipboard(emojiElt) {
@@ -49,7 +66,7 @@ function createEmojiRange(emojiElt) {
 
 function replaceCurrentSelection(selection, range) {
   recordCurrentSelection(selection)
-  selection.empty(); // Unsure if should use this or `removeAllRanges`
+  selection.removeAllRanges(); // Unsure if should use this or `removeAllRanges`
   selection.addRange(range);
 }
 
@@ -70,6 +87,7 @@ function restorePrevSelection(selection, range) {
   else
     selection.removeAllRanges();
 
+  // BROKEN!
   if (oldSelectionRange)
     selection.addRange(oldSelectionRange);
 }
@@ -90,10 +108,21 @@ function isHidden() {
 
 function showPicker() {
   picker.style.display = "";
+  getInput().focus();
 }
 
 function hidePicker() {
   picker.style.display = "none";
+}
+
+function getInput() {
+  return picker.querySelector("input");
+}
+
+function getChoicesContainer() {
+  var choices = picker.querySelector("[data-emoji-choices]");
+  if (!choices) throw new Error("Could not find emoji choices container.");
+  return choices;
 }
 
 function recordMeta() {
